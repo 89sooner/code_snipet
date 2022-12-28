@@ -7,9 +7,10 @@ from collections import defaultdict
 
 def calc_inclusive_subnet(ip_list):
 
-    ip_list = [ _ip[0] for _ip in ip_list]
-    sorted_list = sorted(ip_list, key=lambda ip: struct.unpack("!L", inet_aton(ip))[0])
+    if type(ip_list) == 'turple':
+        ip_list = [ _ip[0] for _ip in ip_list]
 
+    sorted_list = sorted(ip_list, key=lambda ip: struct.unpack("!L", inet_aton(ip))[0])
     split_list = [ '.'.join(_ip.split('.')[0:3]) for _ip in sorted_list ]
     elim_dup_list = list(dict.fromkeys(split_list))
 
@@ -29,7 +30,7 @@ def calc_inclusive_subnet(ip_list):
         while 2**ip_range < distance:
             ip_range += 1
 
-        net.append(ipaddress.IPv4Network(str(min_ip) + '/' +str(32-ip_range), strict=False))
+        net.append(str(ipaddress.IPv4Network(str(min_ip) + '/' +str(32-ip_range), strict=False)))
 
     '''
         if max_ip not in net:
@@ -37,7 +38,6 @@ def calc_inclusive_subnet(ip_list):
             ip_range+=1
             net = ipaddress.IPv4Network(str(min_ip) + '/' +str(32-ip_range), strict=False)
     '''
-
     return net
 
 
